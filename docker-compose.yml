@@ -1,0 +1,34 @@
+name: db
+services:
+  mongo-local:
+    image: mongo:8.0.8-noble
+    container_name: mongo-local
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  redis-local:
+    image: redis:7-alpine
+    container_name: redis-local
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+
+  postgres-local:
+    image: postgres:16-alpine
+    container_name: postgres-local
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  redis-data:
+  postgres-data:
+  mongo-data:
