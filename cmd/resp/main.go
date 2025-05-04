@@ -14,19 +14,23 @@ func main() {
 		fmt.Println(err)
 		return
 	}
+
 	configure := config.GetConfig()
+
 	if config.IsRDBMS() {
 		if err := database.InitDB().Error; err != nil {
 			fmt.Println(err)
 			return
 		}
 	}
+
 	if config.IsRedis() {
 		if _, err := database.InitRedis(); err != nil {
 			fmt.Println(err)
 			return
 		}
 	}
+
 	if config.IsMongo() {
 		if _, err := database.InitMongo(); err != nil {
 			fmt.Println(err)
