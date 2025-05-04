@@ -65,11 +65,11 @@ func Config() (err error) {
 	}
 	configuration.Logger = logger()
 
-	configuration.Security, err = security()
-	if err != nil {
-		return
-	}
-	configuration.Server = server()
+	// configuration.Security, err = security()
+	// if err != nil {
+	// 	return
+	// }
+	// configuration.Server = server()
 
 	// configuration.ViewConfig, err = view()
 	// if err != nil {
