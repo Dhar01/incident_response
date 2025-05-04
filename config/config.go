@@ -69,7 +69,7 @@ func Config() (err error) {
 	// if err != nil {
 	// 	return
 	// }
-	// configuration.Server = server()
+	configuration.Server = server()
 
 	// configuration.ViewConfig, err = view()
 	// if err != nil {

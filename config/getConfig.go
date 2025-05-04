@@ -15,10 +15,10 @@ func IsProd() bool {
 // 	return GetConfig().Security.MustBasicAuth == Activated
 // }
 
-// // IsJWT returns true when JWT is enabled in .env
-// func IsJWT() bool {
-// 	return GetConfig().Security.MustJWT == Activated
-// }
+// IsJWT returns true when JWT is enabled in .env
+func IsJWT() bool {
+	return GetConfig().Security.MustJWT == Activated
+}
 
 // // InvalidateJWT returns true when this feature is enabled in .env
 // func InvalidateJWT() bool {
@@ -35,20 +35,20 @@ func IsProd() bool {
 // 	return GetConfig().Security.MustHash == Activated
 // }
 
-// // IsCipher returns true when encryption at rest is enabled in .env
-// func IsCipher() bool {
-// 	return GetConfig().Security.MustCipher
-// }
+// IsCipher returns true when encryption at rest is enabled in .env
+func IsCipher() bool {
+	return GetConfig().Security.MustCipher
+}
 
 // // Is2FA returns true when two-factor authentication is enabled in .env
 // func Is2FA() bool {
 // 	return GetConfig().Security.Must2FA == Activated
 // }
 
-// // Is2FADoubleHash returns true when double hashing is enabled in .env
-// func Is2FADoubleHash() bool {
-// 	return GetConfig().Security.TwoFA.DoubleHash
-// }
+// Is2FADoubleHash returns true when double hashing is enabled in .env
+func Is2FADoubleHash() bool {
+	return GetConfig().Security.TwoFA.DoubleHash
+}
 
 // // IsWAF returns true when app firewall is enabled in .env
 // func IsWAF() bool {
@@ -105,12 +105,12 @@ func IsMongo() bool {
 // 	return GetConfig().Security.RecoverPass
 // }
 
-// // IsEmailVerificationCodeUUIDv4 returns true when it is enabled in .env
-// func IsEmailVerificationCodeUUIDv4() bool {
-// 	return GetConfig().EmailConf.EmailVerificationCodeUUIDv4
-// }
+// IsEmailVerificationCodeUUIDv4 returns true when it is enabled in .env
+func IsEmailVerificationCodeUUIDv4() bool {
+	return GetConfig().EmailConf.EmailVerificationCodeUUIDv4
+}
 
-// // IsPasswordRecoverCodeUUIDv4 returns true when it is enabled in .env
-// func IsPasswordRecoverCodeUUIDv4() bool {
-// 	return GetConfig().EmailConf.PasswordRecoverCodeUUIDv4
-// }
+// IsPasswordRecoverCodeUUIDv4 returns true when it is enabled in .env
+func IsPasswordRecoverCodeUUIDv4() bool {
+	return GetConfig().EmailConf.PasswordRecoverCodeUUIDv4
+}
