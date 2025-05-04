@@ -75,20 +75,20 @@ func IsProd() bool {
 // 	return GetConfig().ViewConfig.Activate == Activated
 // }
 
-// // IsRDBMS returns true when RDBMS is enabled in .env
-// func IsRDBMS() bool {
-// 	return GetConfig().Database.RDBMS.Activate == Activated
-// }
+// IsRDBMS returns true when RDBMS is enabled in .env
+func IsRDBMS() bool {
+	return GetConfig().Database.RDBMS.Activate == Activated
+}
 
-// // IsRedis returns true when Redis is enabled in .env
-// func IsRedis() bool {
-// 	return GetConfig().Database.REDIS.Activate == Activated
-// }
+// IsRedis returns true when Redis is enabled in .env
+func IsRedis() bool {
+	return GetConfig().Database.REDIS.Activate == Activated
+}
 
-// // IsMongo returns true when Mongo is enabled in .env
-// func IsMongo() bool {
-// 	return GetConfig().Database.MongoDB.Activate == Activated
-// }
+// IsMongo returns true when Mongo is enabled in .env
+func IsMongo() bool {
+	return GetConfig().Database.MongoDB.Activate == Activated
+}
 
 // // IsEmailService returns true when email service is enabled in .env
 // func IsEmailService() bool {
