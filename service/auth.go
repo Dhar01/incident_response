@@ -73,6 +73,7 @@ func DecryptEmail(emailNonce, emailCipher string) (email string, err error) {
 	if err != nil {
 		return
 	}
+
 	cipherEmail, err := hex.DecodeString(emailCipher)
 	if err != nil {
 		return
