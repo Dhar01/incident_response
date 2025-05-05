@@ -19,19 +19,27 @@ type Incident struct {
 	AssignedTo  uint64
 }
 
-type SeverityType int
+type IncidentReq struct {
+	Title       string       `json:"title"`
+	Description string       `json:"description"`
+	Status      StatusType   `json:"status"`
+	Severity    SeverityType `json:"severity"`
+	AssignedTo  uint64       `json:"assigned_to"`
+}
+
+type SeverityType string
 
 const (
-	Low SeverityType = iota
-	Medium
-	High
-	Critical
+	Low      SeverityType = "low"
+	Medium   SeverityType = "medium"
+	High     SeverityType = "high"
+	Critical SeverityType = "critical"
 )
 
-type StatusType int
+type StatusType string
 
 const (
-	Open StatusType = iota
-	Acknowledged
-	Closed
+	Open         StatusType = "open"
+	Acknowledged StatusType = "acknowledged"
+	Closed       StatusType = "closed"
 )
