@@ -5,4 +5,4 @@
 
 Database structure:
 
-![Diagram](db_struct.png)
+![Diagram](db_structure.png)
