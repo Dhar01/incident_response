@@ -49,6 +49,7 @@ func Login(payload model.AuthPayload) (httpResponse model.HTTPResponse, httpStat
 		log.WithError(err).Error("error code: 1013.2")
 		return setMessage(errInternalServer, http.StatusInternalServerError)
 	}
+
 	if !verifyPass {
 		return setMessage("wrong credentials", http.StatusUnauthorized)
 	}
@@ -98,24 +99,25 @@ func Login(payload model.AuthPayload) (httpResponse model.HTTPResponse, httpStat
 		}
 	}
 
-	// issue new tokens
-	accessJWT, _, err := middleware.GetJWT(claims, "access")
-	if err != nil {
-		log.WithError(err).Error("error code: 1013.5")
-		return setMessage(errInternalServer, http.StatusInternalServerError)
-	}
-	refreshJWT, _, err := middleware.GetJWT(claims, "refresh")
-	if err != nil {
-		log.WithError(err).Error("error code: 1013.6")
-		return setMessage(errInternalServer, http.StatusInternalServerError)
-	}
+	// // issue new tokens
+	// accessJWT, _, err := middleware.GetJWT(claims, "access")
+	// if err != nil {
+	// 	log.WithError(err).Error("error code: 1013.5")
+	// 	return setMessage(errInternalServer, http.StatusInternalServerError)
+	// }
+	// refreshJWT, _, err := middleware.GetJWT(claims, "refresh")
+	// if err != nil {
+	// 	log.WithError(err).Error("error code: 1013.6")
+	// 	return setMessage(errInternalServer, http.StatusInternalServerError)
+	// }
 
-	jwtPayload := middleware.JWTPayload{}
-	jwtPayload.AccessJWT = accessJWT
-	jwtPayload.RefreshJWT = refreshJWT
-	jwtPayload.TwoAuth = claims.TwoFA
+	// jwtPayload := middleware.JWTPayload{}
+	// jwtPayload.AccessJWT = accessJWT
+	// jwtPayload.RefreshJWT = refreshJWT
+	// jwtPayload.TwoAuth = claims.TwoFA
 
-	httpResponse.Message = jwtPayload
+	// httpResponse.Message = jwtPayload
+	httpResponse.Message = "ok"
 	httpStatusCode = http.StatusOK
 	return
 }

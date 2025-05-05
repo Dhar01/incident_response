@@ -10,6 +10,7 @@ import (
 	"github.com/Dhar01/incident_resp/internal/model"
 	"github.com/Dhar01/incident_resp/lib"
 	"github.com/Dhar01/incident_resp/service"
+	"github.com/pilinux/argon2"
 	"github.com/pilinux/crypt"
 
 	log "github.com/sirupsen/logrus"
@@ -54,7 +55,6 @@ func CreateUserAuth(auth model.Auth) (httpResponse model.HTTPResponse, httpStatu
 	// valid: non-encryption mode -> upgrade to encryption mode
 	// invalid: encryption mode -> downgrade to non-encryption mode
 	if !config.IsCipher() {
-
 		err := db.Where("email_hash IS NOT NULL AND email_hash != ?", "").First(&auth).Error
 		if err != nil {
 			if err.Error() != database.RecordNotFound {
@@ -103,10 +103,26 @@ func CreateUserAuth(auth model.Auth) (httpResponse model.HTTPResponse, httpStatu
 		}
 	}
 
+	configSecurity := config.GetConfig().Security
+
+	hashPass, err := argon2.CreateHash(auth.Password, configSecurity.HashSec, &argon2.Params{
+		Memory:      configSecurity.HashPass.Memory,
+		Iterations:  configSecurity.HashPass.Iterations,
+		SaltLength:  configSecurity.HashPass.SaltLength,
+		Parallelism: configSecurity.HashPass.Parallelism,
+		KeyLength:   configSecurity.HashPass.KeyLength,
+	})
+	if err != nil {
+		log.WithError(err).Error("error code: 1002.5")
+		return setMessage(errInternalServer, http.StatusInternalServerError)
+	}
+
+	authFinal.Password = hashPass
+
 	// send a verification email if required by the application
 	emailDelivered, err := service.SendEmail(authFinal.Email, model.EmailTypeVerifyEmailNewAcc)
 	if err != nil {
-		log.WithError(err).Error("error code: 1002.5")
+		log.WithError(err).Error("error code: 1002.6")
 		return setMessage("email delivery service failed", http.StatusInternalServerError)
 	}
 
