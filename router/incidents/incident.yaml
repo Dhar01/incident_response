@@ -1,0 +1,114 @@
+openapi: 3.0.0
+
+info:
+    title: Incident Management API
+    description: API for incident test
+    version: 0.0.1
+    license:
+        name: MIT
+    x-oapi-codegen-type-mappings:
+        uuid: github.com/google/uuid.UUID
+
+
+servers:
+    - url: http://localhost:8999/api/v1
+
+paths:
+
+    /incidents:
+
+        # GET /api/v1/incidents
+        get:
+            summary:
+            description:
+            operationId:
+            tags:
+                - incident
+            responses:
+                "200":
+                    description: "success"
+                "500":
+                    $ref: '#/components/responses/InternalServerError'
+
+
+
+        # POST /api/v1/incidents
+        post:
+
+
+    /incidents/{id}:
+        # GET /api/v1/incidents/{id}
+        get:
+
+        # PUT /api/v1/incidents/{id}
+        put:
+
+        # DELETE /api/v1/incidents/{id}
+        delete:
+
+
+components:
+    securitySchemes:
+        BearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+
+
+    responses:
+        InternalServerError:
+            description: Internal server error
+
+        BadRequestError:
+            description: Invalid input, bad request
+
+        UnauthorizedAccessError:
+            description: Unauthorized access
+
+        NotFoundError:
+            description: status not found
+
+        ConflictError:
+            description: conflict with the server state
+
+    schemas:
+        Incident:
+            type: object
+            x-go-type: models.IncidentReq
+            x-go-type-import:
+                name: models
+                path: github.com/Dhar01/incident_resp/internal/model
+            required:
+                - title
+                - status
+                - severity
+                - assigned_to
+            properties:
+                title:
+                    type: string
+                    example: "Something happened"
+                description:
+                    type: string
+                    example: "this goes to description"
+                status:
+                    $ref: "#/components/schemas/StatusType"
+                severity:
+                    $ref: "#/components/schemas/SeverityType"
+                assigned_to:
+                    type: int
+                    example: 1
+
+        StatusType:
+            type: string
+            enum:
+                - open
+                - acknowledged
+                - closed
+
+        SeverityType:
+            type: string
+            enum:
+                - low
+                - medium
+                - high
+                - critical

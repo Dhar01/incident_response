@@ -11,8 +11,8 @@ info:
     x-oapi-codegen-type-mappings:
         uuid: github.com/google/uuid.UUID
 
-# servers:
-#     - url: http://localhost:8080/api/v1
+servers:
+    - url: http://localhost:8999/api/v1
 
 paths:
 
