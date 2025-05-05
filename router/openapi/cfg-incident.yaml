@@ -1,0 +1,10 @@
+package: incident_gen
+output: ./incidents/incident.gen.go
+
+generate:
+    models: true
+    gin-server: true
+    embedded-spec: true
+
+output-options:
+    skip-prune: true
