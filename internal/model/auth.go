@@ -35,12 +35,17 @@ type Auth struct {
 	CreatedAt   time.Time      `json:"createdAt,omitempty"`
 	UpdatedAt   time.Time      `json:"updatedAt,omitempty"`
 	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
-	Email       string         `gorm:"index" json:"email"`
+	Email       string         `gorm:"type:varchar(100);uniqueIndex;not null" json:"email"`
 	EmailCipher string         `json:"-"`
 	EmailNonce  string         `json:"-"`
 	EmailHash   string         `gorm:"index" json:"-"`
-	Password    string         `json:"password"`
+	Password    string         `gorm:"type:varchar(255);not null" json:"password"`
 	VerifyEmail int8           `json:"-"`
+}
+
+type AuthReq struct {
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required,min=8"`
 }
 
 // // UnmarshalJSON ...
