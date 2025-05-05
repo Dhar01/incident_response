@@ -19,6 +19,10 @@ type testAPI struct {
 
 var _ auth_gen.ServerInterface = (*testAPI)(nil)
 
+func newTestAPI() *testAPI {
+	return &testAPI{}
+}
+
 func (api *testAPI) CreateUserAuth(c *gin.Context) {
 	// delete existing auth cookie if present
 	_, errAccessJWT := c.Cookie("accessJWT")
@@ -51,7 +55,8 @@ func (api *testAPI) CreateUserAuth(c *gin.Context) {
 		return
 	}
 
-	var auth model.Auth
+	// var auth model.Auth
+	var auth model.AuthReq
 
 	// bind JSON
 	if err := c.ShouldBindJSON(&auth); err != nil {
@@ -59,7 +64,10 @@ func (api *testAPI) CreateUserAuth(c *gin.Context) {
 		return
 	}
 
-	resp, statusCode := handler.CreateUserAuth(auth)
+	resp, statusCode := handler.CreateUserAuth(model.Auth{
+		Email:    string(auth.Email),
+		Password: auth.Password,
+	})
 
 	if reflect.TypeOf(resp.Message).Kind() == reflect.String {
 		renderer.Render(c, resp, statusCode)
