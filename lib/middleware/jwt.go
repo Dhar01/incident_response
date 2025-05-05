@@ -285,7 +285,7 @@ func ValidateRefreshJWT(token *jwt.Token) (interface{}, error) {
 func GetJWT(customClaims MyCustomClaims, tokenType string) (string, string, error) {
 	var (
 		key     []byte
-		privKey interface{}
+		privKey any
 		ttl     int
 		nbf     int
 	)
