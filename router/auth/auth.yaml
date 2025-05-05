@@ -115,7 +115,11 @@ components:
                 path: github.com/Dhar01/incident_resp/internal/model
             type: object
 
-        RegisterRequest:
+        Auth:
+            x-go-type: models.AuthReq
+            x-go-type-import:
+                name: models
+                path: github.com/Dhar01/incident_resp/internal/model
             type: object
             required:
                 - email
@@ -129,7 +133,27 @@ components:
                     type: string
                     format: password
                     minLength: 8
-                    example: "SecureP@ss123"
+                    example: 'SecureP@ss123'
+
+        RegisterRequest:
+            type: object
+            properties:
+                auth:
+                    $ref: '#/components/schemas/Auth'
+
+            # required:
+            #     - email
+            #     - password
+            # properties:
+            #     email:
+            #         type: string
+            #         format: email
+            #         example: 'user@example.com'
+            #     password:
+            #         type: string
+            #         format: password
+            #         minLength: 8
+            #         example: "SecureP@ss123"
 
         RegisterResponse:
             type: object
