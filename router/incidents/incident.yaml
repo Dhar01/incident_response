@@ -22,11 +22,21 @@ paths:
             summary: get all incidents
             description: list all available incidents
             operationId: fetchIncidents
+            security:
+                - BearerAuth: []
             tags:
                 - incident
             responses:
                 "200":
-                    description: ok
+                    description: List of incidents
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Incident'
+                "401":
+                    $ref: '#/components/responses/UnauthorizedAccessError'
                 "500":
                     $ref: '#/components/responses/InternalServerError'
 
@@ -35,6 +45,8 @@ paths:
             summary: Create a new incident
             description: create a new incident with metadata
             operationId: createNewIncident
+            security:
+                - BearerAuth: []
             tags:
                 - incident
             requestBody:
@@ -45,21 +57,52 @@ paths:
                             $ref: '#/components/schemas/Incident'
             responses:
                 "201":
-                    description: created
+                    description: Incident created successfully
                 "400":
                     $ref: '#/components/responses/BadRequestError'
+                "401":
+                    $ref: '#/components/responses/UnauthorizedAccessError'
                 "500":
                     $ref: '#/components/responses/InternalServerError'
 
 
-    # /incidents/{id}:
-    #     # GET /api/v1/incidents/{id}
-    #     get:
-    #     # PUT /api/v1/incidents/{id}
-    #     put:
-    #     # DELETE /api/v1/incidents/{id}
-    #     delete:
+    /incidents/{id}:
 
+        # GET /api/v1/incidents/{id}
+        get:
+            summary: get one incident
+            description: fetch one incident by its id
+            operationId: fetchIncidentByID
+            security:
+                - BearerAuth: []
+            tags:
+                - incident
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: Incident found
+                    content:
+                        application/json:
+                            $ref: '#/components/schemas/Incident'
+
+                "401":
+                    $ref: '#/components/responses/UnauthorizedAccessError'
+                "404":
+                    $ref: '#/components/responses/NotFoundError'
+                "500":
+                    $ref: '#/components/responses/InternalServerError'
+
+
+        # # PUT /api/v1/incidents/{id}
+        # put:
+        # # DELETE /api/v1/incidents/{id}
+        # delete:
 
 components:
     securitySchemes:
@@ -67,7 +110,6 @@ components:
             type: http
             scheme: bearer
             bearerFormat: JWT
-
 
     responses:
         InternalServerError:
@@ -80,10 +122,10 @@ components:
             description: Unauthorized access
 
         NotFoundError:
-            description: status not found
+            description: Resource not found
 
         ConflictError:
-            description: conflict with the server state
+            description: Conflict with the current server state
 
     schemas:
         Incident:
@@ -100,17 +142,18 @@ components:
             properties:
                 title:
                     type: string
-                    example: "Something happened"
+                    example: "Server Down"
                 description:
                     type: string
-                    example: "this goes to description"
+                    example: "The production server is unreachable"
                 status:
                     $ref: "#/components/schemas/StatusType"
                 severity:
                     $ref: "#/components/schemas/SeverityType"
                 assigned_to:
-                    type: int
-                    example: 1
+                    type: integer
+                    format: uint64
+                    example: 101
 
         StatusType:
             type: string
