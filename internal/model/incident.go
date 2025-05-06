@@ -7,20 +7,25 @@ import (
 )
 
 type Incident struct {
-	AuthID    uint64         `gorm:"primaryKey" json:"authID,omitempty"`
-	CreatedAt time.Time      `json:"createdAt,omitempty"`
-	UpdatedAt time.Time      `json:"updatedAt,omitempty"`
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+	IncidentID uint64         `gorm:"primaryKey"`
+	CreatedAt  time.Time      `json:"createdAt,omitempty"`
+	UpdatedAt  time.Time      `json:"updatedAt,omitempty"`
+	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"`
 
-	Title       string
-	Description string
-	Status      StatusType
-	Severity    SeverityType
-	AssignedTo  uint64
+	Title       string       `gorm:"not null"`
+	Description string       `gorm:"type:text"`
+	Status      StatusType   `gorm:"default:'open'"`
+	Severity    SeverityType `gorm:"default:'medium'"`
+
+	AuthID     uint64 `gorm:"not null"`
+	AssignedTo uint64 `gorm:"not null"`
+
+	Creator  Auth `gorm:"foreignKey:AuthID"`
+	Assignee Auth `gorm:"foreignKey:AssignedTo"`
 }
 
 type IncidentReq struct {
-	Title       string       `json:"title"`
+	Title       string       `json:"title" validate:"required"`
 	Description string       `json:"description"`
 	Status      StatusType   `json:"status"`
 	Severity    SeverityType `json:"severity"`

@@ -41,6 +41,9 @@ type Auth struct {
 	EmailHash   string         `gorm:"index" json:"-"`
 	Password    string         `gorm:"type:varchar(255);not null" json:"password"`
 	VerifyEmail int8           `json:"-"`
+
+	CreateIncidents   []Incident `gorm:"foreignKey:AuthID"`
+	AssignedIncidents []Incident `gorm:"foreignKey:AssignedTo"`
 }
 
 type AuthReq struct {
