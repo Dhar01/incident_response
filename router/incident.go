@@ -24,7 +24,17 @@ func (api *incidentAPI) FetchIncidents(c *gin.Context) {
 }
 
 func (api *incidentAPI) CreateNewIncident(c *gin.Context) {
-	// ! user verifications will be processed on middleware
+	authIDRaw, ok := c.Get("authID")
+	if !ok {
+		renderer.Render(c, gin.H{"message": "authID not found in context"}, http.StatusUnauthorized)
+		return
+	}
+
+	authID, ok := authIDRaw.(uint64)
+	if !ok {
+		renderer.Render(c, gin.H{"message": "invalid authID type in context"}, http.StatusUnauthorized)
+	}
+
 	var req model.IncidentReq
 
 	if err := c.ShouldBindBodyWithJSON(&req); err != nil {
@@ -32,7 +42,7 @@ func (api *incidentAPI) CreateNewIncident(c *gin.Context) {
 		return
 	}
 
-	resp, statusCode := handler.CreateIncident(req)
+	resp, statusCode := handler.CreateIncident(req, authID)
 
 	if reflect.TypeOf(resp.Message).Kind() == reflect.String {
 		renderer.Render(c, resp, statusCode)

@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/Dhar01/incident_resp/config"
+	"github.com/Dhar01/incident_resp/lib/middleware"
 	auth_gen "github.com/Dhar01/incident_resp/router/auth"
 	incident_gen "github.com/Dhar01/incident_resp/router/incidents"
 	"github.com/gin-gonic/gin"
@@ -43,7 +44,9 @@ func authRoutes(router *gin.RouterGroup, baseURL string) {
 }
 
 func incidentRoutes(router *gin.RouterGroup, baseURL string) {
-	middlewares := []incident_gen.MiddlewareFunc{}
+	middlewares := []incident_gen.MiddlewareFunc{
+		incident_gen.MiddlewareFunc(middleware.JWT()),
+	}
 
 	opt := incident_gen.GinServerOptions{
 		BaseURL:     baseURL,
