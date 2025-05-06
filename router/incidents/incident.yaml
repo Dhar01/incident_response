@@ -99,8 +99,37 @@ paths:
                     $ref: '#/components/responses/InternalServerError'
 
 
-        # # PUT /api/v1/incidents/{id}
-        # put:
+        # PUT /api/v1/incidents/{id}
+        put:
+            summary: Update an incident
+            operationId: updateIncident
+            security:
+                - BearerAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Incident'
+            responses:
+                "200":
+                    description: Incident updated
+                "400":
+                    $ref: '#/components/responses/BadRequestError'
+                "401":
+                    $ref: '#/components/responses/UnauthorizedAccessError'
+                "404":
+                    $ref: '#/components/responses/NotFoundError'
+                "500":
+                    $ref: '#/components/responses/InternalServerError'
+
         # # DELETE /api/v1/incidents/{id}
         # delete:
 

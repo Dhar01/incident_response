@@ -50,6 +50,9 @@ type StatusType string
 // CreateNewIncidentJSONRequestBody defines body for CreateNewIncident for application/json ContentType.
 type CreateNewIncidentJSONRequestBody = Incident
 
+// UpdateIncidentJSONRequestBody defines body for UpdateIncident for application/json ContentType.
+type UpdateIncidentJSONRequestBody = Incident
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// get all incidents
@@ -61,6 +64,9 @@ type ServerInterface interface {
 	// get one incident
 	// (GET /incidents/{id})
 	FetchIncidentByID(c *gin.Context, id uint64)
+	// Update an incident
+	// (PUT /incidents/{id})
+	UpdateIncident(c *gin.Context, id uint64)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -128,6 +134,32 @@ func (siw *ServerInterfaceWrapper) FetchIncidentByID(c *gin.Context) {
 	siw.Handler.FetchIncidentByID(c, id)
 }
 
+// UpdateIncident operation middleware
+func (siw *ServerInterfaceWrapper) UpdateIncident(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "id" -------------
+	var id uint64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", c.Param("id"), &id, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter id: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	c.Set(BearerAuthScopes, []string{})
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.UpdateIncident(c, id)
+}
+
 // GinServerOptions provides options for the Gin server.
 type GinServerOptions struct {
 	BaseURL      string
@@ -158,28 +190,30 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.GET(options.BaseURL+"/incidents", wrapper.FetchIncidents)
 	router.POST(options.BaseURL+"/incidents", wrapper.CreateNewIncident)
 	router.GET(options.BaseURL+"/incidents/:id", wrapper.FetchIncidentByID)
+	router.PUT(options.BaseURL+"/incidents/:id", wrapper.UpdateIncident)
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/9RW32/bNhD+V4jbHhnL3rJh1VuaLICHtSjyA3sIgoImzxI7ilTJo10v0P8+kJJtebGb",
-	"bAMG7Mkmeffp7r7vjnwC6ZrWWbQUoHwCj6F1NmBevBXqBj9HDPSz986nLYVBet2SdhZKmNuVMFoxbdtI",
-	"nC2EYr53gI7DpbNLo+Up5+0xW2uqGdXIZPQeLbGAfoWeBRKECWhuCb0V5jbvn4ylN9p6YzbrOLx3dO2i",
-	"VSf8bjC46CUy64gtk2FyurciUu28/gPVhZQYwgn3sSET2RK6jkOQNTYil3FupVZoKf1vvWvRk+4LLELQ",
-	"lUX1kVxa4hfRtAahnE1nHJbON4KghKgt/XgOHGjTIpSgLWGFObeDWEYAcFcja71TUaazbU10YNF6FLIW",
-	"C4N7xEBe2yoBBlyh17RJaN96XEIJ3xR7iRRDWsXtYHeXAJIfCYrhRa9stfUhTSnWcdg9w+zKre3z6DoO",
-	"SV3ao4LyYXDffXoUOz8o7OMOyC0+oSTg8OWscmfDZuMUmjDZknSDn8cGZ7ppnc/UWdHs7YFDK6iGEipN",
-	"dVxMpGuKq1r46azQA9TH1EyFHnRZZMecxUHxUv42Nikj49bAoUGlYwMcal3VwEF6TVoKM0pkz9eooiMg",
-	"12Kqn5C/W7c2qCpUCci4gOoITOZdxhTSbWJq6H4UHv1FTFk+wSKvrrea/OW3OxhEnpD60z1lNVELXQLW",
-	"dumed83FhzlbOs+2pWKUZgYHoyXagKNyv5vfjbSy6yX2TlhRYZP+XnyYA4cV+tCDTyfTySyT6ESrz6RT",
-	"WKHt6WxE22pb5QRj1OqQwMq5ymCRDib39/OrXJpUTNFqKOH7yXQyHZjPCDuq86pCep6p0YGYMIaJldAm",
-	"tR3bO2VwL5LpPIVyjSTr+ej4YBx/N52mH+ksDdNEtK3RMvsXn0I/A/peS/80YfNiS+6GU7cjT3gvNj17",
-	"h7n8mnJxy1ECHYfz6ezUN3bRF6fGacfhhz6rr/sfuwHGsoXy4VCwD4/dI4cQm0b4TSIZexbGtSeRdPAA",
-	"2z147Di0LhxhUXoUhEwwi+u9aPPF1SAJJUg8I/My+7zH9a7E/fzCQG+d2vwtKl/H4OGEJB+xeyah2bGb",
-	"c8inz1KxEDNFy2jMpqf4FRT99bHwv5HG5TFuj8uj46OWL5606k72/TK1MnN23+5ssWGaAtPq633/djO/",
-	"ykPGiwYJfcgZ6ASarxy+HY0Z6JBvPtLMy++HVId/MGFeKUZ+Sma7R9a/1cf59Pxl/8Pn3386cMbsnxBU",
-	"hkyf6FmO3gy3Z1kUxklhaheo/OnNmzeFaHWxmkH32P0ZAAD//7D9hjm1CwAA",
+	"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",
+	"5k0mGp2tZtA+tH8GAAD//ycq+pEVDgAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
