@@ -33,7 +33,7 @@ func CreateUserAuth(auth model.Auth) (httpResponse model.HTTPResponse, httpStatu
 
 	// email validation
 	if !lib.ValidateEmail(auth.Email) {
-		return setMessage("wrong email address", http.StatusBadRequest)
+		return setErrorMessage("wrong email address", http.StatusBadRequest)
 	}
 
 	// for backward compatibility
@@ -43,12 +43,12 @@ func CreateUserAuth(auth model.Auth) (httpResponse model.HTTPResponse, httpStatu
 		if err.Error() != database.RecordNotFound {
 			// db read error
 			log.WithError(err).Error("error code: 1002.1")
-			return setMessage(errInternalServer, http.StatusInternalServerError)
+			return setErrorMessage(errInternalServer, http.StatusInternalServerError)
 		}
 	}
 
 	if err == nil {
-		return setMessage("email already registered", http.StatusBadRequest)
+		return setErrorMessage("email already registered", http.StatusBadRequest)
 	}
 
 	// downgrade must be avoided to prevent creating duplicate accounts
@@ -60,14 +60,14 @@ func CreateUserAuth(auth model.Auth) (httpResponse model.HTTPResponse, httpStatu
 			if err.Error() != database.RecordNotFound {
 				// db read error
 				log.WithError(err).Error("error code: 1002.2")
-				return setMessage(errInternalServer, http.StatusInternalServerError)
+				return setErrorMessage(errInternalServer, http.StatusInternalServerError)
 			}
 		}
 
 		if err == nil {
 			e := errors.New("check env: ACTIVATE_CIPHER")
 			log.WithError(e).Error("error code: 1002.3")
-			return setMessage(errInternalServer, http.StatusInternalServerError)
+			return setErrorMessage(errInternalServer, http.StatusInternalServerError)
 		}
 	}
 
@@ -83,7 +83,7 @@ func CreateUserAuth(auth model.Auth) (httpResponse model.HTTPResponse, httpStatu
 		)
 		if err != nil {
 			log.WithError(err).Error("error code: 1001.1")
-			return setMessage(errInternalServer, http.StatusInternalServerError)
+			return setErrorMessage(errInternalServer, http.StatusInternalServerError)
 		}
 
 		authFinal.EmailHash = hex.EncodeToString(emailHash)
@@ -94,12 +94,12 @@ func CreateUserAuth(auth model.Auth) (httpResponse model.HTTPResponse, httpStatu
 			if err.Error() != database.RecordNotFound {
 				// db read error
 				log.WithError(err).Error("error code: 1002.4")
-				return setMessage(errInternalServer, http.StatusInternalServerError)
+				return setErrorMessage(errInternalServer, http.StatusInternalServerError)
 			}
 		}
 
 		if err == nil {
-			return setMessage("email already registered", http.StatusBadRequest)
+			return setErrorMessage("email already registered", http.StatusBadRequest)
 		}
 	}
 
@@ -114,7 +114,7 @@ func CreateUserAuth(auth model.Auth) (httpResponse model.HTTPResponse, httpStatu
 	})
 	if err != nil {
 		log.WithError(err).Error("error code: 1002.5")
-		return setMessage(errInternalServer, http.StatusInternalServerError)
+		return setErrorMessage(errInternalServer, http.StatusInternalServerError)
 	}
 
 	authFinal.Password = hashPass
@@ -123,7 +123,7 @@ func CreateUserAuth(auth model.Auth) (httpResponse model.HTTPResponse, httpStatu
 	emailDelivered, err := service.SendEmail(authFinal.Email, model.EmailTypeVerifyEmailNewAcc)
 	if err != nil {
 		log.WithError(err).Error("error code: 1002.6")
-		return setMessage("email delivery service failed", http.StatusInternalServerError)
+		return setErrorMessage("email delivery service failed", http.StatusInternalServerError)
 	}
 
 	if emailDelivered {
@@ -141,7 +141,7 @@ func CreateUserAuth(auth model.Auth) (httpResponse model.HTTPResponse, httpStatu
 
 		if err != nil {
 			log.WithError(err).Error("error code: 1001.2")
-			return setMessage(errInternalServer, http.StatusInternalServerError)
+			return setErrorMessage(errInternalServer, http.StatusInternalServerError)
 		}
 
 		// save email only in ciphertext
@@ -155,7 +155,7 @@ func CreateUserAuth(auth model.Auth) (httpResponse model.HTTPResponse, httpStatu
 	if err := tx.Create(&authFinal).Error; err != nil {
 		tx.Rollback()
 		log.WithError(err).Error("error code: 1001.3")
-		return setMessage(errInternalServer, http.StatusInternalServerError)
+		return setErrorMessage(errInternalServer, http.StatusInternalServerError)
 	}
 
 	tx.Commit()
@@ -166,7 +166,7 @@ func CreateUserAuth(auth model.Auth) (httpResponse model.HTTPResponse, httpStatu
 	return
 }
 
-func setMessage(message string, statusCode int) (httpResponse model.HTTPResponse, httpStatusCode int) {
+func setErrorMessage(message string, statusCode int) (httpResponse model.HTTPResponse, httpStatusCode int) {
 	httpResponse.Message = message
 	httpStatusCode = statusCode
 	return

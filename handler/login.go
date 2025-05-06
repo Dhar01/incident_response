@@ -20,7 +20,7 @@ import (
 func Login(payload model.AuthPayload) (httpResponse model.HTTPResponse, httpStatusCode int) {
 	payload.Email = strings.TrimSpace(payload.Email)
 	if !lib.ValidateEmail(payload.Email) {
-		return setMessage("wrong email address", http.StatusBadRequest)
+		return setErrorMessage("wrong email address", http.StatusBadRequest)
 	}
 
 	v, err := service.GetUserByEmail(payload.Email, false)
@@ -28,10 +28,10 @@ func Login(payload model.AuthPayload) (httpResponse model.HTTPResponse, httpStat
 		if err.Error() != database.RecordNotFound {
 			// db read error
 			log.WithError(err).Error("error code: 1013.1")
-			return setMessage(errInternalServer, http.StatusInternalServerError)
+			return setErrorMessage(errInternalServer, http.StatusInternalServerError)
 		}
 
-		return setMessage("email not found", http.StatusNotFound)
+		return setErrorMessage("email not found", http.StatusNotFound)
 	}
 
 	// app settings
@@ -40,18 +40,18 @@ func Login(payload model.AuthPayload) (httpResponse model.HTTPResponse, httpStat
 	// check whether email verification is required
 	if configSecurity.VerifyEmail {
 		if v.VerifyEmail != model.EmailVerified {
-			return setMessage("email verification required", http.StatusUnauthorized)
+			return setErrorMessage("email verification required", http.StatusUnauthorized)
 		}
 	}
 
 	verifyPass, err := argon2.ComparePasswordAndHash(payload.Password, configSecurity.HashSec, v.Password)
 	if err != nil {
 		log.WithError(err).Error("error code: 1013.2")
-		return setMessage(errInternalServer, http.StatusInternalServerError)
+		return setErrorMessage(errInternalServer, http.StatusInternalServerError)
 	}
 
 	if !verifyPass {
-		return setMessage("wrong credentials", http.StatusUnauthorized)
+		return setErrorMessage("wrong credentials", http.StatusUnauthorized)
 	}
 
 	// custom claims
@@ -76,7 +76,7 @@ func Login(payload model.AuthPayload) (httpResponse model.HTTPResponse, httpStat
 			if err.Error() != database.RecordNotFound {
 				// db read error
 				log.WithError(err).Error("error code: 1013.3")
-				return setMessage(errInternalServer, http.StatusInternalServerError)
+				return setErrorMessage(errInternalServer, http.StatusInternalServerError)
 			}
 		}
 		if err == nil {
@@ -88,7 +88,7 @@ func Login(payload model.AuthPayload) (httpResponse model.HTTPResponse, httpStat
 				hashPass, err := service.GetHash([]byte(payload.Password))
 				if err != nil {
 					log.WithError(err).Error("error code: 1013.4")
-					return setMessage(errInternalServer, http.StatusInternalServerError)
+					return setErrorMessage(errInternalServer, http.StatusInternalServerError)
 				}
 
 				// save the hashed pass in memory for OTP validation step
@@ -103,12 +103,12 @@ func Login(payload model.AuthPayload) (httpResponse model.HTTPResponse, httpStat
 	// accessJWT, _, err := middleware.GetJWT(claims, "access")
 	// if err != nil {
 	// 	log.WithError(err).Error("error code: 1013.5")
-	// 	return setMessage(errInternalServer, http.StatusInternalServerError)
+	// 	return setErrorMessage(errInternalServer, http.StatusInternalServerError)
 	// }
 	// refreshJWT, _, err := middleware.GetJWT(claims, "refresh")
 	// if err != nil {
 	// 	log.WithError(err).Error("error code: 1013.6")
-	// 	return setMessage(errInternalServer, http.StatusInternalServerError)
+	// 	return setErrorMessage(errInternalServer, http.StatusInternalServerError)
 	// }
 
 	// jwtPayload := middleware.JWTPayload{}

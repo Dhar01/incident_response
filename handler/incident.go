@@ -22,9 +22,7 @@ func CreateIncident(incident model.IncidentReq) (httpResponse model.HTTPResponse
 	// check if assignee exists
 	if err := db.First(&model.Auth{}, incident.AssignedTo).Error; err != nil {
 		log.WithError(err).Error("error code: 2001.1")
-		httpResponse.Message = "Assigned user not found"
-		httpStatusCode = http.StatusNotFound
-		return
+		return setErrorMessage("assigned user not found", http.StatusNotFound)
 	}
 
 	newIncident := model.Incident{
@@ -39,9 +37,7 @@ func CreateIncident(incident model.IncidentReq) (httpResponse model.HTTPResponse
 
 	if err := db.Create(&newIncident).Error; err != nil {
 		log.WithError(err).Error("error code: 2001.2")
-		httpResponse.Message = errInternalServer
-		httpStatusCode = http.StatusInternalServerError
-		return
+		return setErrorMessage(errInternalServer, http.StatusInternalServerError)
 	}
 
 	httpResponse.Message = newIncident
