@@ -19,32 +19,46 @@ paths:
 
         # GET /api/v1/incidents
         get:
-            summary:
-            description:
-            operationId:
+            summary: get all incidents
+            description: list all available incidents
+            operationId: fetchIncidents
             tags:
                 - incident
             responses:
                 "200":
-                    description: "success"
+                    description: ok
+                "500":
+                    $ref: '#/components/responses/InternalServerError'
+
+        # POST /api/v1/incidents
+        post:
+            summary: Create a new incident
+            description: create a new incident with metadata
+            operationId: createNewIncident
+            tags:
+                - incident
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Incident'
+            responses:
+                "201":
+                    description: created
+                "400":
+                    $ref: '#/components/responses/BadRequestError'
                 "500":
                     $ref: '#/components/responses/InternalServerError'
 
 
-
-        # POST /api/v1/incidents
-        post:
-
-
-    /incidents/{id}:
-        # GET /api/v1/incidents/{id}
-        get:
-
-        # PUT /api/v1/incidents/{id}
-        put:
-
-        # DELETE /api/v1/incidents/{id}
-        delete:
+    # /incidents/{id}:
+    #     # GET /api/v1/incidents/{id}
+    #     get:
+    #     # PUT /api/v1/incidents/{id}
+    #     put:
+    #     # DELETE /api/v1/incidents/{id}
+    #     delete:
 
 
 components:
