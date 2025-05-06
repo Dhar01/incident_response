@@ -30,6 +30,7 @@ require (
 )
 
 require (
+	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect
 	github.com/pilinux/cryptoengine v0.1.10 // indirect
 	github.com/sec51/convert v1.0.2 // indirect
 	rsc.io/qr v0.2.0 // indirect
