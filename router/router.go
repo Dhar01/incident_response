@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/Dhar01/incident_resp/config"
 	auth_gen "github.com/Dhar01/incident_resp/router/auth"
+	incident_gen "github.com/Dhar01/incident_resp/router/incidents"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,6 +18,9 @@ func SetUpRouter(configure config.Configuration) (*gin.Engine, error) {
 
 	// auth routes
 	authRoutes(&router.RouterGroup, base)
+
+	// incident routes
+	incidentRoutes(&router.RouterGroup, base)
 
 	if err := router.SetTrustedProxies(nil); err != nil {
 		return router, err
@@ -36,4 +40,17 @@ func authRoutes(router *gin.RouterGroup, baseURL string) {
 	api := newTestAPI()
 
 	auth_gen.RegisterHandlersWithOptions(router, api, opt)
+}
+
+func incidentRoutes(router *gin.RouterGroup, baseURL string) {
+	middlewares := []incident_gen.MiddlewareFunc{}
+
+	opt := incident_gen.GinServerOptions{
+		BaseURL:     baseURL,
+		Middlewares: middlewares,
+	}
+
+	api := newIncidentAPI()
+
+	incident_gen.RegisterHandlersWithOptions(router, api, opt)
 }
