@@ -10,7 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func CreateIncident(incident model.IncidentReq) (httpResponse model.HTTPResponse, httpStatusCode int) {
+func CreateIncident(incident model.IncidentReq, authID uint64) (httpResponse model.HTTPResponse, httpStatusCode int) {
 	db := database.GetDB()
 
 	if incident.Title == "" || incident.Status == "" || incident.Severity == "" {
@@ -41,6 +41,29 @@ func CreateIncident(incident model.IncidentReq) (httpResponse model.HTTPResponse
 	}
 
 	httpResponse.Message = newIncident
+	httpStatusCode = http.StatusOK
+	return
+}
+
+func UpdateIncident(incident model.IncidentReq, authID uint64) (httpResponse model.HTTPResponse, httpStatusCode int) {
+	return model.HTTPResponse{}, 0
+}
+
+func GetIncidentByID(id uint64) (httpResponse model.HTTPResponse, httpStatusCode int) {
+	return model.HTTPResponse{}, 0
+}
+
+func GetAllIncidents() (httpResponse model.HTTPResponse, httpStatusCode int) {
+	db := database.GetDB()
+
+	var incidents []model.Incident
+
+	if err := db.Find(&incidents).Error; err != nil {
+		log.WithError(err).Error("error code: 2004.1")
+		return setErrorMessage(errInternalServer, http.StatusInternalServerError)
+	}
+
+	httpResponse.Message = incidents
 	httpStatusCode = http.StatusOK
 	return
 }
