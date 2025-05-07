@@ -23,6 +23,12 @@ func (api *incidentAPI) FetchIncidents(c *gin.Context) {
 
 }
 
+
+func (api *incidentAPI) FetchIncidentByID(c *gin.Context, id uint64) {
+
+}
+
+
 func (api *incidentAPI) CreateNewIncident(c *gin.Context) {
 	authIDRaw, ok := c.Get("authID")
 	if !ok {
@@ -52,10 +58,26 @@ func (api *incidentAPI) CreateNewIncident(c *gin.Context) {
 	renderer.Render(c, resp.Message, statusCode)
 }
 
-func (api *incidentAPI) FetchIncidentByID(c *gin.Context, id uint64) {
-
-}
-
 func (api *incidentAPI) UpdateIncident(c *gin.Context, id uint64) {
+	authIDRaw, ok := c.Get("authID")
+	if !ok {
+		renderer.Render(c, gin.H{"message": "authID not found in context"}, http.StatusUnauthorized)
+		return
+	}
 
+	authID, ok := authIDRaw.(uint64)
+	if !ok {
+		renderer.Render(c, gin.H{"message": "invalid authID type in context"}, http.StatusUnauthorized)
+	}
+
+	var req model.IncidentReq
+
+	resp, statusCode := handler.UpdateIncident(req, authID)
+
+	if reflect.TypeOf(resp.Message).Kind() == reflect.String {
+		renderer.Render(c, resp, statusCode)
+		return
+	}
+
+	renderer.Render(c, resp.Message, statusCode)
 }
