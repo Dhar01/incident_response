@@ -45,8 +45,36 @@ func CreateIncident(incident model.IncidentReq, authID uint64) (httpResponse mod
 	return
 }
 
-func UpdateIncident(incident model.IncidentReq, authID uint64) (httpResponse model.HTTPResponse, httpStatusCode int) {
-	return model.HTTPResponse{}, 0
+func UpdateIncident(incident model.IncidentUpdate, incidentID uint64) (httpResponse model.HTTPResponse, httpStatusCode int) {
+	db := database.GetDB()
+
+	if incident.IncidentID == 0 {
+		return setErrorMessage("incident ID is required", http.StatusBadRequest)
+	}
+
+	var existing model.Incident
+
+	if err := db.First(&existing, incidentID).Error; err != nil {
+		log.WithError(err).Error("error code: 2002.1")
+		return setErrorMessage("incident not found", http.StatusNotFound)
+	}
+
+	// Update fields
+	existing.Title = incident.Title
+	existing.Description = incident.Description
+	existing.Status = incident.Status
+	existing.Severity = incident.Severity
+	existing.AssignedTo = incident.AssignedTo
+	existing.UpdatedAt = time.Now()
+
+	if err := db.Save(&existing).Error; err != nil {
+		log.WithError(err).Error("error code: 2002.2")
+		return setErrorMessage(errInternalServer, http.StatusInternalServerError)
+	}
+
+	httpResponse.Message = existing
+	httpStatusCode = http.StatusOK
+	return
 }
 
 func GetIncidentByID(id uint64) (httpResponse model.HTTPResponse, httpStatusCode int) {
