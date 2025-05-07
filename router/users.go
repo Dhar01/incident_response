@@ -84,11 +84,11 @@ func (api *testAPI) LogIn(c *gin.Context) {
 		return
 	}
 
-	// // verify that JWT service is enabled in .env
-	// if !config.IsJWT() {
-	// 	renderer.Render(c, gin.H{"message": "JWT service not enabled"}, http.StatusNotImplemented)
-	// 	return
-	// }
+	// verify that JWT service is enabled in .env
+	if !config.IsJWT() {
+		renderer.Render(c, gin.H{"message": "JWT service not enabled"}, http.StatusNotImplemented)
+		return
+	}
 
 	var payload model.AuthPayload
 	if err := c.ShouldBindJSON(&payload); err != nil {

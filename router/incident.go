@@ -101,18 +101,18 @@ func (api *incidentAPI) UpdateIncident(c *gin.Context, id uint64) {
 		return
 	}
 
-	authID, ok := authIDRaw.(uint64)
+	_, ok = authIDRaw.(uint64)
 	if !ok {
 		renderer.Render(c, gin.H{"message": "invalid authID type in context"}, http.StatusUnauthorized)
 	}
 
-	var req model.IncidentReq
+	var req model.IncidentUpdate
 
 	if err := c.ShouldBindBodyWithJSON(&req); err != nil {
 		renderer.Render(c, gin.H{"message": err.Error()}, http.StatusBadRequest)
 	}
 
-	resp, statusCode := handler.UpdateIncident(req, authID)
+	resp, statusCode := handler.UpdateIncident(req, id)
 
 	if reflect.TypeOf(resp.Message).Kind() == reflect.String {
 		renderer.Render(c, resp, statusCode)
