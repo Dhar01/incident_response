@@ -20,14 +20,28 @@ func newIncidentAPI() *incidentAPI {
 }
 
 func (api *incidentAPI) FetchIncidents(c *gin.Context) {
+	// ! need to handle cases for pagination and query params for filtering
 
+	resp, statusCode := handler.GetAllIncidents()
+
+	if reflect.TypeOf(resp.Message).Kind() == reflect.String {
+		renderer.Render(c, resp, statusCode)
+		return
+	}
+
+	renderer.Render(c, resp.Message, statusCode)
 }
-
 
 func (api *incidentAPI) FetchIncidentByID(c *gin.Context, id uint64) {
+	resp, statusCode := handler.GetIncidentByID(id)
 
+	if reflect.TypeOf(resp.Message).Kind() == reflect.String {
+		renderer.Render(c, resp, statusCode)
+		return
+	}
+
+	renderer.Render(c, resp.Message, statusCode)
 }
-
 
 func (api *incidentAPI) CreateNewIncident(c *gin.Context) {
 	authIDRaw, ok := c.Get("authID")
@@ -71,6 +85,10 @@ func (api *incidentAPI) UpdateIncident(c *gin.Context, id uint64) {
 	}
 
 	var req model.IncidentReq
+
+	if err := c.ShouldBindBodyWithJSON(&req); err != nil {
+		renderer.Render(c, gin.H{"message": err.Error()}, http.StatusBadRequest)
+	}
 
 	resp, statusCode := handler.UpdateIncident(req, authID)
 
