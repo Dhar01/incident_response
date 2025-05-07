@@ -13,3 +13,5 @@ tmp
 coverage.txt
 pri*key*.pem
 pub*key*.pem
+cmd/server/resp
+cmd/server/keys
