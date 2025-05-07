@@ -32,6 +32,15 @@ type IncidentReq struct {
 	AssignedTo  uint64       `json:"assigned_to"`
 }
 
+type IncidentUpdate struct {
+	IncidentID  uint64
+	Title       string       `json:"title" validate:"required"`
+	Description string       `json:"description"`
+	Status      StatusType   `json:"status"`
+	Severity    SeverityType `json:"severity"`
+	AssignedTo  uint64       `json:"assigned_to"`
+}
+
 type SeverityType string
 
 const (

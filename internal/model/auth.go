@@ -31,16 +31,17 @@ const (
 
 // Auth model - `auths` table
 type Auth struct {
-	AuthID      uint64         `gorm:"primaryKey" json:"authID,omitempty"`
-	CreatedAt   time.Time      `json:"createdAt,omitempty"`
-	UpdatedAt   time.Time      `json:"updatedAt,omitempty"`
-	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
-	Email       string         `gorm:"type:varchar(100);uniqueIndex;not null" json:"email"`
-	EmailCipher string         `json:"-"`
-	EmailNonce  string         `json:"-"`
-	EmailHash   string         `gorm:"index" json:"-"`
-	Password    string         `gorm:"type:varchar(255);not null" json:"password"`
-	VerifyEmail int8           `json:"-"`
+	AuthID    uint64         `gorm:"primaryKey" json:"authID,omitempty"`
+	CreatedAt time.Time      `json:"createdAt,omitempty"`
+	UpdatedAt time.Time      `json:"updatedAt,omitempty"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+
+	Email       string `gorm:"type:varchar(100)" json:"email"`
+	EmailCipher string `json:"-"`
+	EmailNonce  string `json:"-"`
+	EmailHash   string `gorm:"uniqueIndex:idx_email_hash" json:"-"`
+	Password    string `gorm:"type:varchar(255);not null" json:"password"`
+	VerifyEmail int8   `json:"-"`
 
 	CreateIncidents   []Incident `gorm:"foreignKey:AuthID"`
 	AssignedIncidents []Incident `gorm:"foreignKey:AssignedTo"`
