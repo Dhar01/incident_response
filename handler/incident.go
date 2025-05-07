@@ -50,7 +50,18 @@ func UpdateIncident(incident model.IncidentReq, authID uint64) (httpResponse mod
 }
 
 func GetIncidentByID(id uint64) (httpResponse model.HTTPResponse, httpStatusCode int) {
-	return model.HTTPResponse{}, 0
+	db := database.GetDB()
+
+	var incident model.Incident
+
+	if err := db.First(&incident, id).Error; err != nil {
+		log.WithError(err).Error("error code: 2003.1")
+		return setErrorMessage("incident not found", http.StatusNotFound)
+	}
+
+	httpResponse.Message = incident
+	httpStatusCode = http.StatusOK
+	return
 }
 
 func GetAllIncidents() (httpResponse model.HTTPResponse, httpStatusCode int) {
