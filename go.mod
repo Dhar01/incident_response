@@ -3,10 +3,7 @@ module github.com/Dhar01/incident_resp
 go 1.24.0
 
 require (
-	github.com/flosch/pongo2/v6 v6.0.0
 	github.com/getkin/kin-openapi v0.127.0
-	github.com/getsentry/sentry-go v0.32.0
-	github.com/getsentry/sentry-go/logrus v0.32.0
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-sql-driver/mysql v1.9.2
 	github.com/golang-jwt/jwt/v5 v5.2.2
@@ -17,11 +14,10 @@ require (
 	github.com/oapi-codegen/runtime v1.1.1
 	github.com/pilinux/argon2 v0.19.0
 	github.com/pilinux/crypt v0.0.14
+	github.com/pilinux/gorest v1.9.3
 	github.com/pilinux/libgo v0.0.5
-	github.com/pilinux/structs v1.1.1
 	github.com/qiniu/qmgo v1.1.9
 	github.com/sirupsen/logrus v1.9.3
-	github.com/ulule/limiter/v3 v3.11.2
 	go.mongodb.org/mongo-driver v1.17.3
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/driver/postgres v1.5.11
@@ -31,8 +27,13 @@ require (
 
 require (
 	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect
+	github.com/flosch/pongo2/v6 v6.0.0 // indirect
+	github.com/getsentry/sentry-go v0.32.0 // indirect
+	github.com/getsentry/sentry-go/logrus v0.32.0 // indirect
 	github.com/pilinux/cryptoengine v0.1.10 // indirect
+	github.com/pilinux/structs v1.1.1 // indirect
 	github.com/sec51/convert v1.0.2 // indirect
+	github.com/ulule/limiter/v3 v3.11.2 // indirect
 	rsc.io/qr v0.2.0 // indirect
 )
 
@@ -74,7 +75,7 @@ require (
 	github.com/oapi-codegen/oapi-codegen/v2 v2.4.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect
 	github.com/perimeterx/marshmallow v1.1.5 // indirect
-	github.com/pilinux/twofactor v1.1.9
+	github.com/pilinux/twofactor v1.1.9 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/speakeasy-api/openapi-overlay v0.9.0 // indirect
 	github.com/tilinna/clock v1.1.0 // indirect
