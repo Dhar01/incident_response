@@ -6,7 +6,7 @@ import (
 
 	"github.com/Dhar01/incident_resp/handler"
 	"github.com/Dhar01/incident_resp/internal/model"
-	"github.com/Dhar01/incident_resp/lib/renderer"
+	"github.com/pilinux/gorest/lib/renderer"
 	incident_gen "github.com/Dhar01/incident_resp/router/incidents"
 	"github.com/gin-gonic/gin"
 )

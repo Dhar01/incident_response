@@ -29,23 +29,20 @@ const (
 	PasswordRecoveryKeyPrefix  string = "gorest-pass-recover-"
 )
 
-// Auth model - `auths` table
 type Auth struct {
-	AuthID    uint64         `gorm:"primaryKey" json:"authID,omitempty"`
-	CreatedAt time.Time      `json:"createdAt,omitempty"`
-	UpdatedAt time.Time      `json:"updatedAt,omitempty"`
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+	AuthID    uint64         `gorm:"column:auth_id;primaryKey" json:"authID,omitempty"`
+	CreatedAt time.Time      `gorm:"column:created_at" json:"createdAt,omitempty"`
+	UpdatedAt time.Time      `gorm:"column:updated_at" json:"updatedAt,omitempty"`
+	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;index" json:"-"`
 
-	Email       string `gorm:"type:varchar(100)" json:"email"`
-	EmailCipher string `json:"-"`
-	EmailNonce  string `json:"-"`
-	EmailHash   string `gorm:"uniqueIndex:idx_email_hash" json:"-"`
-	Password    string `gorm:"type:varchar(255);not null" json:"password"`
-	VerifyEmail int8   `json:"-"`
-
-	CreateIncidents   []Incident `gorm:"foreignKey:AuthID"`
-	AssignedIncidents []Incident `gorm:"foreignKey:AssignedTo"`
+	Email       string `gorm:"column:email" json:"email"`
+	EmailCipher string `gorm:"column:email_cipher" json:"-"`
+	EmailNonce  string `gorm:"column:email_nonce" json:"-"`
+	EmailHash   string `gorm:"column:email_hash" json:"-"`
+	Password    string `gorm:"column:password_hash" json:"password"`
+	VerifyEmail int8   `gorm:"column:verify_email" json:"-"`
 }
+
 
 type AuthReq struct {
 	Email    string `json:"email" validate:"required,email"`

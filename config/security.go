@@ -4,8 +4,8 @@ import (
 	"crypto"
 	"net/http"
 
-	"github.com/Dhar01/incident_resp/lib"
-	"github.com/Dhar01/incident_resp/lib/middleware"
+	"github.com/pilinux/gorest/lib"
+	"github.com/pilinux/gorest/lib/middleware"
 )
 
 // SecurityConfig ...

@@ -11,7 +11,7 @@ import (
 	"github.com/Dhar01/incident_resp/config"
 	"github.com/Dhar01/incident_resp/internal/database"
 	"github.com/Dhar01/incident_resp/internal/model"
-	"github.com/Dhar01/incident_resp/lib"
+	"github.com/pilinux/gorest/lib"
 	"github.com/google/uuid"
 	"github.com/mediocregopher/radix/v4"
 	"github.com/pilinux/libgo/timestring"

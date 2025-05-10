@@ -10,6 +10,7 @@ import (
 
 type auth model.Auth
 type user model.User
+type incident model.Incident
 
 func StartMigration(configure config.Configuration) error {
 	db := database.GetDB()
@@ -21,6 +22,7 @@ func StartMigration(configure config.Configuration) error {
 		if err := db.AutoMigrate(
 			&auth{},
 			&user{},
+			&incident{},
 		); err != nil {
 			return err
 		}

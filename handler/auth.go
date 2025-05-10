@@ -5,10 +5,12 @@ import (
 	"errors"
 	"net/http"
 
+	// "log/slog"
+
 	"github.com/Dhar01/incident_resp/config"
 	"github.com/Dhar01/incident_resp/internal/database"
 	"github.com/Dhar01/incident_resp/internal/model"
-	"github.com/Dhar01/incident_resp/lib"
+	"github.com/pilinux/gorest/lib"
 	"github.com/Dhar01/incident_resp/service"
 	"github.com/pilinux/argon2"
 	"github.com/pilinux/crypt"
@@ -43,6 +45,7 @@ func CreateUserAuth(auth model.Auth) (httpResponse model.HTTPResponse, httpStatu
 		if err.Error() != database.RecordNotFound {
 			// db read error
 			log.WithError(err).Error("error code: 1002.1")
+			// slog.Info(err.Error()).
 			return setErrorMessage(errInternalServer, http.StatusInternalServerError)
 		}
 	}

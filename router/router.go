@@ -2,7 +2,7 @@ package router
 
 import (
 	"github.com/Dhar01/incident_resp/config"
-	"github.com/Dhar01/incident_resp/lib/middleware"
+	"github.com/pilinux/gorest/lib/middleware"
 	auth_gen "github.com/Dhar01/incident_resp/router/auth"
 	incident_gen "github.com/Dhar01/incident_resp/router/incidents"
 	"github.com/gin-gonic/gin"

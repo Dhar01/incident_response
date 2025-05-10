@@ -7,8 +7,8 @@ import (
 	"github.com/Dhar01/incident_resp/config"
 	"github.com/Dhar01/incident_resp/internal/database"
 	"github.com/Dhar01/incident_resp/internal/model"
-	"github.com/Dhar01/incident_resp/lib"
-	"github.com/Dhar01/incident_resp/lib/middleware"
+	"github.com/pilinux/gorest/lib"
+	"github.com/pilinux/gorest/lib/middleware"
 	"github.com/Dhar01/incident_resp/service"
 	"github.com/pilinux/argon2"
 

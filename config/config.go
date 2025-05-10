@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Dhar01/incident_resp/lib"
-	"github.com/Dhar01/incident_resp/lib/middleware"
+	"github.com/pilinux/gorest/lib"
+	"github.com/pilinux/gorest/lib/middleware"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/joho/godotenv"
 )
