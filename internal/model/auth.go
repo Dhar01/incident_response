@@ -29,18 +29,31 @@ const (
 	PasswordRecoveryKeyPrefix  string = "gorest-pass-recover-"
 )
 
+// type Auth struct {
+// 	AuthID    uint64         `gorm:"column:auth_id;primaryKey" json:"authID,omitempty"`
+// 	CreatedAt time.Time      `gorm:"column:created_at" json:"createdAt,omitempty"`
+// 	UpdatedAt time.Time      `gorm:"column:updated_at" json:"updatedAt,omitempty"`
+// 	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;index" json:"-"`
+// 	Email       string `gorm:"column:email" json:"email"`
+// 	EmailCipher string `gorm:"column:email_cipher" json:"-"`
+// 	EmailNonce  string `gorm:"column:email_nonce" json:"-"`
+// 	EmailHash   string `gorm:"column:email_hash" json:"-"`
+// 	Password    string `gorm:"column:password_hash" json:"password"`
+// 	VerifyEmail int8   `gorm:"column:verify_email" json:"-"`
+// }
+
 type Auth struct {
-	AuthID    uint64         `gorm:"column:auth_id;primaryKey" json:"authID,omitempty"`
-	CreatedAt time.Time      `gorm:"column:created_at" json:"createdAt,omitempty"`
-	UpdatedAt time.Time      `gorm:"column:updated_at" json:"updatedAt,omitempty"`
+	AuthID    uint64         `gorm:"column:auth_id;primaryKey;autoIncrement" json:"authID,omitempty"`
+	CreatedAt time.Time      `gorm:"column:created_at;autoCreateTime" json:"createdAt,omitempty"`
+	UpdatedAt time.Time      `gorm:"column:updated_at;autoUpdateTime" json:"updatedAt,omitempty"`
 	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;index" json:"-"`
 
-	Email       string `gorm:"column:email" json:"email"`
-	EmailCipher string `gorm:"column:email_cipher" json:"-"`
-	EmailNonce  string `gorm:"column:email_nonce" json:"-"`
-	EmailHash   string `gorm:"column:email_hash" json:"-"`
-	Password    string `gorm:"column:password_hash" json:"password"`
-	VerifyEmail int8   `gorm:"column:verify_email" json:"-"`
+	Email       string `gorm:"column:email;type:varchar(4);not null;default:''" json:"email"`
+	EmailCipher string `gorm:"column:email_cipher;type:text" json:"-"`
+	EmailNonce  string `gorm:"column:email_nonce;type:text" json:"-"`
+	EmailHash   string `gorm:"column:email_hash;type:varchar(255);unique;not null" json:"-"`
+	Password    string `gorm:"column:password_hash;type:varchar(255);not null" json:"password"`
+	VerifyEmail int8   `gorm:"column:verify_email;type:smallint;default:0" json:"-"`
 }
 
 
