@@ -5,7 +5,6 @@ import (
 
 	"github.com/Dhar01/incident_resp/config"
 	"github.com/Dhar01/incident_resp/internal/database"
-	"github.com/Dhar01/incident_resp/internal/migrate"
 	"github.com/Dhar01/incident_resp/router"
 )
 
@@ -24,11 +23,12 @@ func main() {
 			return
 		}
 
-		// start db migration
-		if err := migrate.StartMigration(*configure); err != nil {
-			fmt.Println(err)
-			return
-		}
+		// // start db migration
+		// if err := migrate.StartMigration(*configure); err != nil {
+		// 	fmt.Println(err)
+		// 	return
+		// }
+
 	}
 
 	if config.IsRedis() {
